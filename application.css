@@ -17,3 +17,8 @@
   align-items: center;
   font-size: 70px;
 }
+
+.tile.winner {
+  background-color: pink;
+  color: green;
+}

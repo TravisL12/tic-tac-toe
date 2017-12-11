@@ -25,9 +25,6 @@ class Game {
       space.tag(this.turn);
       if (!this.checkWinner()) {
         this.turn = this.turn === this.x ? this.o : this.x;
-      } else {
-        console.log(`WINNER ${this.turn}`);
-        this.gameOver = true;
       }
     } else {
       console.log('SPACE TAKEN!!!!');
@@ -46,15 +43,21 @@ class Game {
       [6, 4, 2],
     ];
 
-    return (
-      winCases.filter(c => {
-        return (
-          this.board.spaces[c[0]].tagged == this.turn &&
-          this.board.spaces[c[1]].tagged == this.turn &&
-          this.board.spaces[c[2]].tagged == this.turn
-        );
-      }).length > 0
-    );
+    const isWinner = winCases.filter(c => {
+      return (
+        this.board.spaces[c[0]].tagged == this.turn &&
+        this.board.spaces[c[1]].tagged == this.turn &&
+        this.board.spaces[c[2]].tagged == this.turn
+      );
+    });
+
+    if (isWinner.length > 0) {
+      this.gameOver = true;
+      console.log(`WINNER ${this.turn}`);
+      isWinner[0].forEach(tile => {
+        this.board.spaces[tile].el.classList.add('winner');
+      });
+    }
   }
 
   render() {
