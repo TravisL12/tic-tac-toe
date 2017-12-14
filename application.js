@@ -45,22 +45,16 @@ class Cpu {
   rankStrategies(strategies) {
     const ranks = new Map();
     const availableStrategies = strategies.forEach((group, idx) => {
-      let rank = 0;
-      if (this.board.spaces[group[0]].tagged === this.o) {
-        rank++;
-      }
-      if (this.board.spaces[group[1]].tagged === this.o) {
-        rank++;
-      }
-      if (this.board.spaces[group[2]].tagged === this.o) {
-        rank++;
-      }
+      const rank = group.reduce((p,c) => {
+        if (this.board.spaces[c].tagged === this.o) {
+          p++;
+        }
+        return p;
+      }, 0);
       ranks.set(group, rank);
     });
 
-    const sorted = new Map([...ranks.entries()].sort()).entries();
-
-    return sorted.next().value[0];
+    return new Map([...ranks.entries()].sort()).entries().next().value[0];
   }
 
   move () {
