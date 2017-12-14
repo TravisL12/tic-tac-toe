@@ -10,9 +10,9 @@ const winCases = [
 ];
 
 class Cpu {
-  constructor(board) {
+  constructor(board, character) {
     this.board = board;
-    this.o = 'O';
+    this.o = character;
     this.currentStrategy;
   }
 
@@ -39,7 +39,28 @@ class Cpu {
       );
     });
 
-    return availableStrategies[0] || [0,1,2,3,4,5,6,7,8];
+    return availableStrategies.length ? this.rankStrategies(availableStrategies) : [0,1,2,3,4,5,6,7,8];
+  }
+
+  rankStrategies(strategies) {
+    const ranks = new Map();
+    const availableStrategies = strategies.forEach((group, idx) => {
+      let rank = 0;
+      if (this.board.spaces[group[0]].tagged === this.o) {
+        rank++;
+      }
+      if (this.board.spaces[group[1]].tagged === this.o) {
+        rank++;
+      }
+      if (this.board.spaces[group[2]].tagged === this.o) {
+        rank++;
+      }
+      ranks.set(group, rank);
+    });
+
+    const sorted = new Map([...ranks.entries()].sort()).entries();
+
+    return sorted.next().value[0];
   }
 
   move () {
@@ -66,7 +87,7 @@ class Game {
     this.x = 'X';
     this.o = 'O';
     this.turn = this.x;
-    this.cpu = new Cpu(this.board);
+    this.cpu = new Cpu(this.board, this.o);
     this.isGameOver = false;
     this.setClickListeners();
   }
