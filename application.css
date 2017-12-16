@@ -1,6 +1,14 @@
+body {
+  margin: 0;
+}
+
 .game-container {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .board-container {
