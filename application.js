@@ -182,13 +182,22 @@ class Game {
 
   endGame(isWinner) {
     this.isGameOver = true;
+
+    // Draw
+    if (!isWinner.length) {
+      this.board.spaces.forEach(space => {
+        space.el.classList.add('draw');
+      });
+
+      this.board.spaces[0].el.addEventListener('transitionend', () => {
+        this.initialize();
+      });
+    }
+
+    // Winner
     isWinner.forEach(tile => {
       this.board.spaces[tile].el.classList.add('winner');
     });
-
-    if (!isWinner.length) {
-      this.initialize();
-    }
   }
 
   render() {

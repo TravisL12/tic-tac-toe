@@ -29,10 +29,17 @@
 }
 
 .tile:nth-child(n + 7) {
-  border-bottom: none black;
+  border-bottom: none;
 }
 
 .tile.winner {
   color: red;
+  text-shadow: 0 0 20px blue;
+}
+
+.tile.draw {
+  background-color: black;
+  border-color: white;
+  color: white;
   text-shadow: 0 0 20px blue;
 }
