@@ -113,7 +113,13 @@ class Cpu {
 
 class Game {
   constructor(id) {
-    this.el = document.getElementById('game');
+    this.id = id;
+    this.initialize();
+  }
+
+  initialize() {
+    this.el = document.getElementById(this.id);
+    this.el.innerHTML = '';
     this.board = new Board();
     this.x = 'X';
     this.o = 'O';
@@ -121,6 +127,7 @@ class Game {
     this.cpu = new Cpu(this.board, this.o);
     this.isGameOver = false;
     this.setClickListeners();
+    this.render();
   }
 
   setClickListeners() {
@@ -178,6 +185,10 @@ class Game {
     isWinner.forEach(tile => {
       this.board.spaces[tile].el.classList.add('winner');
     });
+
+    if (!isWinner.length) {
+      this.initialize();
+    }
   }
 
   render() {
@@ -222,4 +233,4 @@ class Tile {
   }
 }
 
-new Game().render();
+new Game('game');
