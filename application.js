@@ -188,15 +188,15 @@ class Game {
       this.board.spaces.forEach(space => {
         space.el.classList.add('draw');
       });
-
-      this.board.spaces[0].el.addEventListener('transitionend', () => {
-        this.initialize();
-      });
     }
 
     // Winner
     isWinner.forEach(tile => {
       this.board.spaces[tile].el.classList.add('winner');
+    });
+
+    this.board.spaces[0].el.addEventListener('transitionend', () => {
+      this.initialize();
     });
   }
 
