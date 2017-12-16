@@ -44,7 +44,7 @@ class Cpu {
 
   rankStrategies(strategies) {
     const ranks = new Map();
-    const availableStrategies = strategies.forEach((group, idx) => {
+    const availableStrategies = strategies.forEach((group) => {
       const rank = group.reduce((p,c) => {
         if (this.board.spaces[c].tagged === this.o) {
           p++;
@@ -57,7 +57,44 @@ class Cpu {
     return new Map([...ranks.entries()].sort()).entries().next().value[0];
   }
 
+  rankDefense() {
+    const ranks = {};
+    const availableStrategies = winCases.forEach((group, idx) => {
+      const rank = group.reduce((p,c) => {
+        if (this.board.spaces[c].tagged === 'X') {
+          p++;
+        }
+        if (this.board.spaces[c].tagged === this.o) {
+          p--;
+        }
+        return p;
+      }, 0);
+      ranks[idx] = rank;
+    });
+
+    let defenseGroup = undefined;
+    Object.keys(ranks).forEach((key) => {
+      if (ranks[key] === 2) {
+        defenseGroup = winCases[key];
+      }
+    })
+
+    if (defenseGroup) {
+      return defenseGroup.filter(space => {
+        return !this.board.spaces[space].tagged;
+      });
+    }
+
+    return false;
+  }
+
   move () {
+    const defenseStrategy = this.rankDefense();
+
+    if (defenseStrategy) {
+      return this.board.spaces[defenseStrategy];
+    }
+
     let nextSpace = undefined;
     this.currentStrategy = this.checkCurrentStrategy() ? this.currentStrategy : this.findStrategy();
 
