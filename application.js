@@ -191,11 +191,12 @@ class Game {
     }
 
     // Winner
+    let lastTile = isWinner[0] || 0;
     isWinner.forEach(tile => {
       this.board.spaces[tile].el.classList.add('winner');
     });
 
-    this.board.spaces[0].el.addEventListener('transitionend', () => {
+    this.board.spaces[lastTile].el.addEventListener('transitionend', () => {
       this.initialize();
     });
   }
