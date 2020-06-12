@@ -3,7 +3,8 @@ body {
 }
 
 .game-container {
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica;
   font-weight: bold;
   display: flex;
   justify-content: center;
@@ -14,8 +15,10 @@ body {
 .board-container {
   display: grid;
   justify-content: center;
-  grid-template-columns: 200px 200px 200px;
-  grid-template-rows: 200px 200px 200px;
+  grid-gap: 2px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  background: black;
 }
 
 .tile {
@@ -24,20 +27,9 @@ body {
   align-items: center;
   font-size: 70px;
   transition: all 1s linear;
-}
-
-.tile:nth-child(3n + 1),
-.tile:nth-child(3n + 2) {
-  border-right: 2px solid black;
-}
-
-.tile:nth-child(n + 1),
-.tile:nth-child(n + 2) {
-  border-bottom: 2px solid black;
-}
-
-.tile:nth-child(n + 7) {
-  border-bottom: none;
+  height: 200px;
+  width: 200px;
+  background: white;
 }
 
 .tile.winner {

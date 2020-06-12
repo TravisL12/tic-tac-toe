@@ -16,36 +16,44 @@ class Cpu {
     this.currentStrategy;
   }
 
-  checkCurrentStrategy () {
+  checkCurrentStrategy() {
     if (!this.currentStrategy) {
       return false;
     }
 
-    return this.currentStrategy.filter((e,i,a) => {
+    return this.currentStrategy.filter((e, i, a) => {
       return (
-        (!this.board.spaces[a[0]].tagged || this.board.spaces[a[0]].tagged === this.o ) &&
-        (!this.board.spaces[a[1]].tagged || this.board.spaces[a[1]].tagged === this.o ) &&
-        (!this.board.spaces[a[2]].tagged || this.board.spaces[a[2]].tagged === this.o )
+        (!this.board.spaces[a[0]].tagged ||
+          this.board.spaces[a[0]].tagged === this.o) &&
+        (!this.board.spaces[a[1]].tagged ||
+          this.board.spaces[a[1]].tagged === this.o) &&
+        (!this.board.spaces[a[2]].tagged ||
+          this.board.spaces[a[2]].tagged === this.o)
       );
     }).length;
   }
 
   findStrategy() {
-    const availableStrategies = winCases.filter(c => {
+    const availableStrategies = winCases.filter((c) => {
       return (
-        (!this.board.spaces[c[0]].tagged || this.board.spaces[c[0]].tagged === this.o ) &&
-        (!this.board.spaces[c[1]].tagged || this.board.spaces[c[1]].tagged === this.o ) &&
-        (!this.board.spaces[c[2]].tagged || this.board.spaces[c[2]].tagged === this.o )
+        (!this.board.spaces[c[0]].tagged ||
+          this.board.spaces[c[0]].tagged === this.o) &&
+        (!this.board.spaces[c[1]].tagged ||
+          this.board.spaces[c[1]].tagged === this.o) &&
+        (!this.board.spaces[c[2]].tagged ||
+          this.board.spaces[c[2]].tagged === this.o)
       );
     });
 
-    return availableStrategies.length ? this.rankStrategies(availableStrategies) : [0,1,2,3,4,5,6,7,8];
+    return availableStrategies.length
+      ? this.rankStrategies(availableStrategies)
+      : [0, 1, 2, 3, 4, 5, 6, 7, 8];
   }
 
   rankStrategies(strategies) {
     const ranks = new Map();
     const availableStrategies = strategies.forEach((group) => {
-      const rank = group.reduce((p,c) => {
+      const rank = group.reduce((p, c) => {
         if (this.board.spaces[c].tagged === this.o) {
           p++;
         }
@@ -60,8 +68,8 @@ class Cpu {
   rankDefense() {
     const ranks = {};
     const availableStrategies = winCases.forEach((group, idx) => {
-      const rank = group.reduce((p,c) => {
-        if (this.board.spaces[c].tagged === 'X') {
+      const rank = group.reduce((p, c) => {
+        if (this.board.spaces[c].tagged === "X") {
           p++;
         }
         if (this.board.spaces[c].tagged === this.o) {
@@ -77,10 +85,10 @@ class Cpu {
       if (ranks[key] === 2) {
         defenseGroup = winCases[key];
       }
-    })
+    });
 
     if (defenseGroup) {
-      return defenseGroup.filter(space => {
+      return defenseGroup.filter((space) => {
         return !this.board.spaces[space].tagged;
       });
     }
@@ -88,7 +96,7 @@ class Cpu {
     return false;
   }
 
-  move () {
+  move() {
     const defenseStrategy = this.rankDefense();
 
     if (defenseStrategy) {
@@ -96,7 +104,9 @@ class Cpu {
     }
 
     let nextSpace = undefined;
-    this.currentStrategy = this.checkCurrentStrategy() ? this.currentStrategy : this.findStrategy();
+    this.currentStrategy = this.checkCurrentStrategy()
+      ? this.currentStrategy
+      : this.findStrategy();
 
     for (let i = 0; i < this.currentStrategy.length; i++) {
       const space = this.board.spaces[this.currentStrategy[i]];
@@ -119,10 +129,10 @@ class Game {
 
   initialize() {
     this.el = document.getElementById(this.id);
-    this.el.innerHTML = '';
+    this.el.innerHTML = "";
     this.board = new Board();
-    this.x = 'X';
-    this.o = 'O';
+    this.x = "X";
+    this.o = "O";
     this.turn = this.x;
     this.cpu = new Cpu(this.board, this.o);
     this.isGameOver = false;
@@ -131,8 +141,8 @@ class Game {
   }
 
   setClickListeners() {
-    this.board.spaces.forEach(space => {
-      space.el.addEventListener('click', this.takeTurn.bind(this, space));
+    this.board.spaces.forEach((space) => {
+      space.el.addEventListener("click", this.takeTurn.bind(this, space));
     });
   }
 
@@ -154,22 +164,22 @@ class Game {
       space.tag(this.turn);
       this.checkWinner();
     } else {
-      console.log('SPACE TAKEN!!!!');
+      console.log("SPACE TAKEN!!!!");
     }
   }
 
   checkWinner() {
-    const isWinner = winCases.filter(c => {
+    const isWinner = winCases.filter((c) => {
       return (
         this.board.spaces[c[0]].tagged == this.turn &&
         this.board.spaces[c[1]].tagged == this.turn &&
         this.board.spaces[c[2]].tagged == this.turn
-        );
+      );
     });
 
-    const isDraw = this.board.spaces.filter( space => {
+    const isDraw = this.board.spaces.filter((space) => {
       return !space.tagged;
-    })
+    });
 
     if (isWinner.length > 0) {
       this.endGame(isWinner[0]);
@@ -185,39 +195,41 @@ class Game {
 
     // Draw
     if (!isWinner.length) {
-      this.board.spaces.forEach(space => {
-        space.el.classList.add('draw');
+      this.board.spaces.forEach((space) => {
+        space.el.classList.add("draw");
       });
     }
 
     // Winner
     let lastTile = isWinner[0] || 0;
-    isWinner.forEach(tile => {
-      this.board.spaces[tile].el.classList.add('winner');
+    isWinner.forEach((tile) => {
+      this.board.spaces[tile].el.classList.add("winner");
     });
 
-    this.board.spaces[lastTile].el.addEventListener('transitionend', () => {
+    this.board.spaces[lastTile].el.addEventListener("transitionend", () => {
       this.initialize();
     });
   }
 
   render() {
-    this.el.classList.add('game-container');
+    this.el.classList.add("game-container");
     this.el.appendChild(this.board.render());
   }
 }
 
 class Board {
   constructor() {
-    this.el = document.createElement('div');
-    this.el.classList.add('board-container');
-    this.spaces = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3'].map(space => {
-      return new Tile(space);
-    });
+    this.el = document.createElement("div");
+    this.el.classList.add("board-container");
+    this.spaces = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"].map(
+      (space) => {
+        return new Tile(space);
+      }
+    );
   }
 
   render() {
-    this.spaces.forEach(space => {
+    this.spaces.forEach((space) => {
       this.el.appendChild(space.render());
     });
 
@@ -227,9 +239,9 @@ class Board {
 
 class Tile {
   constructor(id) {
-    this.el = document.createElement('div');
+    this.el = document.createElement("div");
     this.el.id = id;
-    this.el.classList.add('tile');
+    this.el.classList.add("tile");
     this.tagged = undefined;
   }
 
@@ -243,4 +255,4 @@ class Tile {
   }
 }
 
-new Game('game');
+new Game("game");
